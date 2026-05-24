@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VoiceCart — BigBasket Smart Shopping</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
+
+<link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="ov-logo">Voice<em>Cart</em></div>
+  <div class="ov-sub">BigBasket Smart Shopping</div>
+  <div class="bar-wrap"><div class="bar" id="loadBar"></div></div>
+  <div class="ov-status" id="loadStatus">Initialising...</div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<div class="app">
+  <header>
+    <div class="logo">Voice<em>Cart</em><small>BigBasket Database</small></div>
+    <div class="header-right">
+      <div class="db-badge" id="dbBadge">Loading... products</div>
+      <div class="status-pill"><div class="sdot" id="sdot"></div><span id="stext">Ready</span></div>
+    </div>
+  </header>
+
+  <div class="main">
+    
+    <div>
+      <div class="no-sr" id="nosr">⚠️ Speech Recognition requires Chrome or Edge browser.</div>
+
+      
+      <div class="panel">
+        <div class="panel-title">🎤 Voice Control</div>
+        <div class="mic-area">
+          <div class="mic-ring" onclick="toggleVoice()">
+            <div class="mic-btn" id="micBtn">🎤</div>
+            <svg viewBox="0 0 88 88" class="mic-ring-svg">
+              <circle cx="44" cy="44" r="40" stroke-dasharray="6 4"/>
+            </svg>
+          </div>
+          <div class="voice-state" id="vstate">Tap to start listening</div>
+          <div class="voice-hint">Say: "add 2 amul butter" · "remove milk" · "add 3 boost"</div>
+          <div class="wave" id="wave">
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          </div>
+          <div class="transcript empty" id="transcript">Your speech will appear here...</div>
+        </div>
+        <div class="chips" id="chips">
+          <div class="chip" onclick="sim('add 2 amul butter')">add 2 amul butter</div>
+          <div class="chip" onclick="sim('add amul vanilla gold ice cream')">amul vanilla ice cream</div>
+          <div class="chip" onclick="sim('add 3 britannia bread')">3 britannia bread</div>
+          <div class="chip" onclick="sim('add horlicks health drink')">horlicks drink</div>
+          <div class="chip" onclick="sim('add 2 dabur honey')">2 dabur honey</div>
+          <div class="chip" onclick="sim('remove butter')">remove butter</div>
+          <div class="chip" onclick="sim('add boost nutrition drink')">boost drink</div>
+          <div class="chip" onclick="sim('add mtr sambhar masala')">mtr masala</div>
+        </div>
+      </div>
+
+      
+      <div class="panel" id="detPanel" style="display:none">
+        <div class="panel-title">⚡ Last Command Results</div>
+        <div class="detected-list" id="detList"></div>
+      </div>
+    </div>
+
+    
+    <div class="cart-panel">
+      <div class="cart-head">
+        <div class="cart-title">🛒 Cart <span class="cart-count" id="cartCnt">0</span></div>
+      </div>
+
+      
+      <div class="sr-dropdown">
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search products manually... (e.g. amul butter)" oninput="onSearchInput(this.value)" onkeydown="onSearchKey(event)"/>
+          <button class="btn-search" onclick="clearSearch()">✕</button>
+        </div>
+        <div class="sr-results" id="srResults"></div>
+      </div>
+
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="cartBody">
+            <tr class="empty-row"><td colspan="6"><span class="empty-icon">🛍️</span>Start speaking to add items</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="bill" id="bill">
+        <div class="bill-row"><span>Items</span><span id="bItems">0</span></div>
+        <div class="bill-row"><span>Subtotal</span><span id="bSub">₹0.00</span></div>
+        <div class="bill-row"><span>GST (5%)</span><span id="bGst">₹0.00</span></div>
+        <div class="bill-total"><span>Total</span><span id="bTotal">₹0.00</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn-checkout" onclick="checkout()">CHECKOUT →</button>
+        <button class="btn-clear" onclick="clearCart()">Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
